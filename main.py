@@ -8,7 +8,7 @@ class SnakeGame:
         self.dot_x=width//2
         self.dot_y=height//2
         self.dot_size=20
-        self.speed=0.1
+        self.speed=0.2
         pygame.init()
         self.show_game_window()
 
@@ -25,14 +25,15 @@ class SnakeGame:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+                
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.dot_x-=self.speed
-        if keys[pygame.K_RIGHT]:
-            self.dot_x+=self.speed
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_LEFT] and self.dot_x > 0:
+            self.dot_x -= self.speed
+        elif keys[pygame.K_RIGHT] and self.dot_x < self.width - self.dot_size:
+            self.dot_x += self.speed
+        elif keys[pygame.K_UP] and self.dot_y > 0:
             self.dot_y -= self.speed
-        if keys[pygame.K_DOWN]:
+        elif keys[pygame.K_DOWN] and self.dot_y < self.height - self.dot_size:
             self.dot_y += self.speed
 
     def update_screen(self):

@@ -9,7 +9,9 @@ class SnakeGame:
         self.dot_x=width//2
         self.dot_y=height//2
         self.dot_size=20
-        self.speed=0.5
+        self.speed=0.1
+        self.direction=(1,0)
+        self.direction_map={ pygame.K_UP: (0,-1), pygame.K_DOWN: (0,1), pygame.K_LEFT: (-1,0), pygame.K_RIGHT: (1,0)}
         self.food_coords=(random.randint(0,self.width),random.randint(0,600))
         pygame.init()
         self.show_game_window()
@@ -20,23 +22,22 @@ class SnakeGame:
         while True:
             self.handle_events()
             self.update_screen()
+            self.move_dot()
+    
+    def move_dot(self):
+        self.dot_x+=self.direction[0]*self.speed
+        self.dot_y+=self.direction[1]*self.speed
 
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and self.dot_x > 0:
-            self.dot_x -= self.speed
-        elif keys[pygame.K_RIGHT] and self.dot_x < self.width - self.dot_size:
-            self.dot_x += self.speed
-        elif keys[pygame.K_UP] and self.dot_y > 0:
-            self.dot_y -= self.speed
-        elif keys[pygame.K_DOWN] and self.dot_y < self.height - self.dot_size:
-            self.dot_y += self.speed
-        elif keys[pygame.K_PLUS] and keys[pygame.K_LCTRL]:
-            self.dot_size+=10
+            elif event.type==pygame.KEYDOWN:
+                if event.key in self.direction_map:
+                    print(event.key)
+                    self.direction=self.direction_map[event.key]
+
 
     def update_screen(self):
         self.screen.fill((0,0,0)) 

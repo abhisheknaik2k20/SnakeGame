@@ -5,6 +5,7 @@ class Position:
     def __init__(self,x,y):
         self.x=x
         self.y=y
+    
 class Snake:
     def __init__(self,game_window):
         self.position= Position(game_window.width //2 , game_window.height//2)
@@ -56,7 +57,7 @@ class SnakeGameWindow:
             self.handle_events()
             self.update_screen()
             self.snake_object.move_snake_object()
-            self.handle_collisions()
+            self.out_of_bounds()
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -64,6 +65,7 @@ class SnakeGameWindow:
                 pygame.quit()
                 sys.exit()
             elif event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_0: self.end_game()
                 self.snake_object.handle_direction_change(event.key)
 
     def update_screen(self):
@@ -72,9 +74,16 @@ class SnakeGameWindow:
         self.food_object.draw(self.screen)
         pygame.display.flip()
     
-    def handle_collisions(self):
-        pass
+    def out_of_bounds(self) -> bool :
+        if self.snake_object.position.x < 0 or self.snake_object.position.x+self.snake_object.size > self.width or self.snake_object.position.y < 0 or self.snake_object.position.y + self.snake_object.size > self.height:
+            self.end_game() 
+    
+    def end_game(self):
+        print("*"*5+"GAME OVER"+"*"*5)
+        pygame.quit()
+        sys.exit()
 
+       
 
 if __name__ == '__main__':
     SnakeGameWindow()

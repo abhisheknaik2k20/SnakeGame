@@ -1,5 +1,6 @@
 import sys
 import pygame
+import random
 class SnakeGame:
     def __init__(self, width=800, height=600):
         self.width = width
@@ -8,14 +9,14 @@ class SnakeGame:
         self.dot_x=width//2
         self.dot_y=height//2
         self.dot_size=20
-        self.speed=0.2
+        self.speed=0.5
+        self.food_coords=(random.randint(0,self.width),random.randint(0,600))
         pygame.init()
         self.show_game_window()
 
     def show_game_window(self):
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Mini Snake Game")
-
         while True:
             self.handle_events()
             self.update_screen()
@@ -25,7 +26,6 @@ class SnakeGame:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-                
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] and self.dot_x > 0:
             self.dot_x -= self.speed
@@ -35,13 +35,17 @@ class SnakeGame:
             self.dot_y -= self.speed
         elif keys[pygame.K_DOWN] and self.dot_y < self.height - self.dot_size:
             self.dot_y += self.speed
+        elif keys[pygame.K_PLUS] and keys[pygame.K_LCTRL]:
+            self.dot_size+=10
 
     def update_screen(self):
         self.screen.fill((0,0,0)) 
-        pygame.draw.rect(
-            self.screen, (200, 50, 50), (self.dot_x, self.dot_y, self.dot_size, self.dot_size)
-        )
+        pygame.draw.rect(self.screen, (200, 50, 50), (self.dot_x, self.dot_y, self.dot_size, self.dot_size))
+        pygame.draw.rect(self.screen, (0,255,0), (*self.food_coords, self.dot_size, self.dot_size), 10)
         pygame.display.flip()
+    
+    def handle_collisions(self):
+        pass
 
 
 if __name__ == '__main__':
